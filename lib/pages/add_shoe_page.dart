@@ -1,6 +1,7 @@
 //import 'dart:convert';
-import 'dart:typed_data';
+//import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -246,6 +247,15 @@ class _AddShoePageState extends State<AddShoePage> {
     });
   }
 
+  Future<Uint8List> computeBytes(XFile file) async {
+    return await compute(_readAsBytes, file.path);
+  }
+
+  Future<Uint8List> _readAsBytes(String path) async {
+    final file = XFile(path);
+    return await file.readAsBytes();
+  }
+
   void pickPhoto() async {
     setState(() {
       isLoading = true;
@@ -261,7 +271,7 @@ class _AddShoePageState extends State<AddShoePage> {
       }
 
       if (pickedImage != null) {
-        Uint8List bytes = await pickedImage.readAsBytes();
+        final bytes = await computeBytes(pickedImage);
         setState(() {
           _uint8list = bytes;
         });
@@ -289,7 +299,7 @@ class _AddShoePageState extends State<AddShoePage> {
       }
 
       if (pickedImage != null) {
-        Uint8List bytes = await pickedImage.readAsBytes();
+        final bytes = await computeBytes(pickedImage);
         setState(() {
           _uint8list = bytes;
         });
