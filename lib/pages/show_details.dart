@@ -1,4 +1,4 @@
-import 'dart:convert';
+//import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:shoe_app/modals/shoe_modal.dart';
@@ -18,7 +18,7 @@ class DetailsPage extends StatelessWidget {
     final animDuration = reduceMotion
         ? Duration.zero
         : Duration(milliseconds: 300);
-    final bytes = base64Decode(shoe.imageUrl);
+    //final bytes = base64Decode(shoe.imageUrl);
     return Scaffold(
       body: Padding(
         padding: EdgeInsetsGeometry.symmetric(horizontal: 12, vertical: 8),
@@ -68,7 +68,7 @@ class DetailsPage extends StatelessWidget {
                 borderRadius: BorderRadiusGeometry.circular(16),
                 child: Hero(
                   tag: 'shoe-image-${shoe.id}',
-                  child: Image.memory(bytes, fit: BoxFit.cover),
+                  child: Image.memory(shoe.imageBytes, fit: BoxFit.cover),
                 ),
               ),
             ),

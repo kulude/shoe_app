@@ -1,4 +1,4 @@
-import 'dart:convert';
+//import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:shoe_app/modals/shoe_modal.dart';
@@ -16,7 +16,7 @@ class MyContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final uintlist = base64Decode(shoe.imageUrl);
+    //final uintlist = base64Decode(shoe.imageUrl);
     final hight = MediaQuery.of(context).size.height;
     return AnimatedContainer(
       duration: duration,
@@ -39,7 +39,7 @@ class MyContainer extends StatelessWidget {
               child: Hero(
                 tag: 'shoe-image-${shoe.id}',
                 child: Image.memory(
-                  uintlist,
+                  shoe.imageBytes,
                   fit: BoxFit.cover, // keeps image proportions correct
                 ),
               ),

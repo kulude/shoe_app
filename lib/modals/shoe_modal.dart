@@ -1,5 +1,6 @@
 //import 'package:show_biz/modals/shoe_status.dart';
 //library shoe_modal;
+import 'dart:typed_data';
 
 import 'package:hive/hive.dart';
 import 'package:uuid/uuid.dart';
@@ -18,7 +19,7 @@ class Shoe {
   @HiveField(4)
   final DateTime dateBought;
   @HiveField(5)
-  final String imageUrl;
+  final Uint8List imageBytes;
   @HiveField(6)
   final DateTime? dateSold;
   @HiveField(7)
@@ -33,7 +34,7 @@ class Shoe {
     required this.costPrice,
     required this.sellPrice,
     required this.dateBought,
-    required this.imageUrl,
+    required this.imageBytes,
     this.dateSold,
     required this.description,
     this.status,
@@ -51,7 +52,7 @@ class Shoe {
       'costPrice': costPrice,
       'sellPrice': sellPrice,
       'dateBought': dateBought.toIso8601String(),
-      'imageUrl': imageUrl,
+      'imageUrl': imageBytes,
       'dateSold': dateSold?.toIso8601String(),
       'description': description,
       'status': status,
@@ -66,7 +67,7 @@ class Shoe {
       costPrice: map['costPrice'],
       sellPrice: map['sellPrice'],
       dateBought: DateTime.parse(map['dateBought']),
-      imageUrl: map['imageUrl'],
+      imageBytes: map['imageUrl'],
       dateSold: map['dateSold'] != null
           ? DateTime.parse(map['dateSold'])
           : null,
@@ -82,7 +83,7 @@ class Shoe {
     double? costPrice,
     double? sellPrice,
     DateTime? dateBought,
-    String? imageUrl,
+    Uint8List? imageBytes,
     DateTime? dateSold,
     String? description,
     bool? status,
@@ -93,7 +94,7 @@ class Shoe {
       costPrice: costPrice ?? this.costPrice,
       sellPrice: sellPrice ?? this.sellPrice,
       dateBought: dateBought ?? this.dateBought,
-      imageUrl: imageUrl ?? this.imageUrl,
+      imageBytes: imageBytes ?? this.imageBytes,
       dateSold: dateSold ?? this.dateSold,
       description: description ?? this.description,
       status: status ?? this.status,

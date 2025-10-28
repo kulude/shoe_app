@@ -1,4 +1,4 @@
-import 'dart:convert';
+//import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -250,20 +250,24 @@ class _AddShoePageState extends State<AddShoePage> {
     setState(() {
       isLoading = true;
     });
-    ImagePicker picker = ImagePicker();
-    XFile? pickedImage = await picker.pickImage(source: ImageSource.gallery);
+    try {
+      ImagePicker picker = ImagePicker();
+      XFile? pickedImage = await picker.pickImage(source: ImageSource.gallery);
 
-    if (pickedImage != null) {
-      setState(() {
-        _file = pickedImage;
-      });
-    }
+      if (pickedImage != null) {
+        setState(() {
+          _file = pickedImage;
+        });
+      }
 
-    if (pickedImage != null) {
-      Uint8List bytes = await pickedImage.readAsBytes();
-      setState(() {
-        _uint8list = bytes;
-      });
+      if (pickedImage != null) {
+        Uint8List bytes = await pickedImage.readAsBytes();
+        setState(() {
+          _uint8list = bytes;
+        });
+      }
+    } catch (e) {
+      print('Could not find');
     }
     setState(() {
       isLoading = false;
@@ -274,21 +278,23 @@ class _AddShoePageState extends State<AddShoePage> {
     setState(() {
       isLoading = true;
     });
-    ImagePicker picker = ImagePicker();
-    XFile? pickedImage = await picker.pickImage(source: ImageSource.camera);
+    try {
+      ImagePicker picker = ImagePicker();
+      XFile? pickedImage = await picker.pickImage(source: ImageSource.camera);
 
-    if (pickedImage != null) {
-      setState(() {
-        _file = pickedImage;
-      });
-    }
+      if (pickedImage != null) {
+        setState(() {
+          _file = pickedImage;
+        });
+      }
 
-    if (pickedImage != null) {
-      Uint8List bytes = await pickedImage.readAsBytes();
-      setState(() {
-        _uint8list = bytes;
-      });
-    }
+      if (pickedImage != null) {
+        Uint8List bytes = await pickedImage.readAsBytes();
+        setState(() {
+          _uint8list = bytes;
+        });
+      }
+    } catch (e) {}
     setState(() {
       isLoading = false;
     });
@@ -306,13 +312,13 @@ class _AddShoePageState extends State<AddShoePage> {
       });
       return;
     }
-    String image64String = base64Encode(_uint8list!);
+    //String image64String = base64Encode(_uint8list!);
     Shoe newShoe = Shoe(
       shoeName: showNameController.text,
       costPrice: double.parse(costPriceController.text),
       sellPrice: double.parse(sellPriceController.text),
       dateBought: _dateTime!,
-      imageUrl: image64String,
+      imageBytes: _uint8list!,
       description: descriptionController.text,
       status: _value,
       dateSold: _dateTimeSold,

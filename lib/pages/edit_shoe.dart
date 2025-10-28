@@ -1,4 +1,4 @@
-import 'dart:convert';
+//import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -57,7 +57,7 @@ class _EditShoeState extends State<EditShoe> {
 
   @override
   Widget build(BuildContext context) {
-    final bytes = base64Decode(widget.shoe.imageUrl);
+    //final bytes = base64Decode(widget.shoe.imageUrl);
     return Scaffold(
       appBar: AppBar(),
       body: Padding(
@@ -74,7 +74,13 @@ class _EditShoeState extends State<EditShoe> {
               SizedBox(
                 height: 200,
                 width: double.infinity,
-                child: Image.memory(bytes, fit: BoxFit.cover),
+                child: Hero(
+                  tag: 'shoe-image-${widget.shoe.id}',
+                  child: Image.memory(
+                    widget.shoe.imageBytes,
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
               TextField(
                 controller: showNameEditController,
@@ -237,28 +243,6 @@ class _EditShoeState extends State<EditShoe> {
   }
 
   void saveShoe(BuildContext context) {
-    // if (showNameEditController.text.isEmpty ||
-    //     costPriceEditController.text.isEmpty ||
-    //     sellPricEditEController.text.isEmpty ||
-    //     descriptionEditController.text.isEmpty ||
-    //     _dateEditTime == null) {
-    //   setState(() {
-    //     _statusEditMessage =
-    //         'Please fill all fields and select a photo and date.';
-    //   });
-    //   return;
-    // }
-    //String image64String = base64Encode(_uint8list!);
-    // Shoe newShoe = Shoe(
-    //   shoeName: showNameEditController.text,
-    //   costPrice: double.parse(costPriceEditController.text),
-    //   sellPrice: double.parse(sellPricEditEController.text),
-    //   dateBought: _dateEditTime!,
-    //   imageUrl: widget.shoe.imageUrl,
-    //   description: descriptionEditController.text,
-    //   status: _value,
-    //   dateSold: _dateEditTimeSold,
-    // );
     Provider.of<ShoeService>(context, listen: false).editShoe(
       widget.shoe.id,
       shoeName: showNameEditController.text,
@@ -283,7 +267,6 @@ class _EditShoeState extends State<EditShoe> {
     setState(() {
       _dateEditString = '';
       _dateEditTime = null;
-      // _statusEditMessage = null;
     });
   }
 }

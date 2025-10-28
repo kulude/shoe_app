@@ -1,13 +1,10 @@
-import 'dart:convert';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shoe_app/modals/shoe_modal.dart';
 import 'package:shoe_app/pages/add_shoe_page.dart';
 import 'package:shoe_app/pages/inventory_pade.dart';
-import 'package:shoe_app/pages/show_details.dart';
 import 'package:shoe_app/services/shoe_service.dart';
+import 'package:shoe_app/utilities/home_screen_image.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -30,7 +27,7 @@ class _HomePageState extends State<HomePage> {
     final shoesSold = shoeSerice.shoesSold;
     final avgTime = shoeSerice.averageTimeTaken;
     String avgTimeString = avgTime == null
-        ? 'Not much time  taken to sold shoe yet'
+        ? 'No time yet'
         : '${avgTime.inDays} days and ${avgTime.inHours % 24} hours';
     return Scaffold(
       appBar: AppBar(
@@ -127,68 +124,12 @@ class _HomePageState extends State<HomePage> {
                 itemCount: shoesSold.length,
                 itemBuilder: (context, index) {
                   final shoe = shoesSold[index];
-                  Uint8List imageBytes = base64Decode(shoe.imageUrl);
+                  //Uint8List imageBytes = base64Decode(shoe.imageUrl);
                   return shoesSold.isEmpty
                       ? Center(child: Text('No shoes added yet!'))
-                      : GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => DetailsPage(shoe: shoe),
-                              ),
-                            );
-                          },
-                          child: Container(
-                            height: 200,
-                            width: double.infinity,
-                            margin: EdgeInsets.symmetric(vertical: 6),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black26,
-                                  blurRadius: 6,
-                                  offset: Offset(0, 3),
-                                ),
-                              ],
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadiusGeometry.circular(16),
-                              child: Stack(
-                                children: [
-                                  Positioned.fill(
-                                    child: Image.memory(
-                                      imageBytes,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                  Positioned.fill(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        gradient: LinearGradient(
-                                          colors: [
-                                            Colors.transparent,
-                                            Colors.transparent,
-                                            Colors.black,
-                                          ],
-                                          begin: Alignment.topCenter,
-                                          end: Alignment.bottomCenter,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    bottom: 10,
-                                    left: 10,
-                                    child: Text(
-                                      shoe.shoeName,
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
+                      : HomeScreenImage(
+                          shoe: shoe,
+                          imageBytes: shoe.imageBytes,
                         );
                 },
               ),
@@ -201,10 +142,6 @@ class _HomePageState extends State<HomePage> {
           Navigator.of(
             context,
           ).push(MaterialPageRoute<Shoe>(builder: (context) => AddShoePage()));
-          // setState(() {
-          //   // _shoeService.getAllShoes.add(shoe!);
-          //   _shoes.add(shoe!);
-          // });
         },
         heroTag: 'Add new shoe',
         child: Icon(Icons.add),

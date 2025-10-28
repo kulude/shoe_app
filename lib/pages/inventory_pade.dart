@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shoe_app/pages/finatials_page.dart';
 import 'package:shoe_app/services/shoe_service.dart';
 import 'package:shoe_app/utilities/delete_dialog.dart';
 import 'package:shoe_app/utilities/shoe_tile.dart';
@@ -28,17 +29,16 @@ class _InventoryPageState extends State<InventoryPage> {
             : Text('${lengthOfShoeToDelete.length} selected'),
         actions: [
           lengthOfShoeToDelete.isEmpty
-              ? Row(
-                  children: [
-                    Text('Refresh'),
-                    SizedBox(width: 5),
-                    IconButton(
-                      onPressed: () {
-                        shoeServicce.getAllShoes;
-                      },
-                      icon: Icon(Icons.refresh),
-                    ),
-                  ],
+              ? GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => FinancialsPage()),
+                    );
+                  },
+                  child: Text(
+                    'Navigate to financials',
+                    style: TextStyle(color: Colors.brown),
+                  ),
                 )
               : GestureDetector(
                   onTap: () {

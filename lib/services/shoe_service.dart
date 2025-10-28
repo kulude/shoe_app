@@ -35,11 +35,9 @@ class ShoeService extends ChangeNotifier {
   }
 
   double get totalCost {
-    return _shoes
-        .where((shoe) => shoe.dateSold != null || (shoe.status ?? false))
-        .fold(0.0, (sum, shoe) {
-          return sum + shoe.costPrice;
-        });
+    return _shoes.fold(0.0, (sum, shoe) {
+      return sum + shoe.costPrice;
+    });
   }
 
   List<Shoe> get shoesSold {
@@ -69,7 +67,7 @@ class ShoeService extends ChangeNotifier {
   void addShoe(Shoe shoe) {
     _shoes.add(shoe);
     hiveService.addShoeToHive(shoe);
-    supabaseService.insertShoeToTable(shoe);
+    //supabaseService.insertShoeToTable(shoe);
     notifyListeners();
   }
 
