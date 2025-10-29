@@ -254,7 +254,6 @@ class _EditShoeState extends State<EditShoe> {
       status: _value,
       dateSold: _dateEditTimeSold,
     );
-    print('${widget.shoe.shoeName} updated successfully');
     Navigator.of(context).popUntil((route) => route.isFirst);
     clearFields();
   }

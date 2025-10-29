@@ -7,8 +7,14 @@ class MyTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
       controller: controller,
+      validator: (String? value) {
+        if (value == null || value.isEmpty) {
+          return 'Please fill this field';
+        }
+        return null;
+      },
       decoration: InputDecoration(labelText: label),
     );
   }

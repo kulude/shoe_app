@@ -3,10 +3,12 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:shoe_app/modals/shoe_modal.dart';
 import 'package:shoe_app/services/shoe_service.dart';
+import 'package:shoe_app/utilities/scaffold_messanger.dart';
 import 'package:shoe_app/utilities/text_field.dart';
 
 class AddShoePage extends StatefulWidget {
@@ -21,6 +23,7 @@ class _AddShoePageState extends State<AddShoePage> {
   final costPriceController = TextEditingController();
   final sellPriceController = TextEditingController();
   final descriptionController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
   XFile? _file;
   Uint8List? _uint8list;
   String _dateString = '';
@@ -59,14 +62,14 @@ class _AddShoePageState extends State<AddShoePage> {
                     value: 1,
                     child: Text('Pick Photo'),
                     onTap: () {
-                      pickPhoto();
+                      takePhoto(source: ImageSource.gallery);
                     },
                   ),
                   PopupMenuItem(
                     value: 2,
                     child: Text('Take Photo'),
                     onTap: () {
-                      takePhoto();
+                      takePhoto(source: ImageSource.camera);
                     },
                   ),
                 ],
@@ -78,115 +81,126 @@ class _AddShoePageState extends State<AddShoePage> {
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15),
         child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              space,
-              SizedBox(
-                height: 200,
-                width: double.infinity,
-                child: _uint8list != null
-                    ? Image.memory(_uint8list!, fit: BoxFit.cover)
-                    : Container(
-                        color: Colors.grey[300],
-                        child: Icon(
-                          Icons.image,
-                          size: 100,
-                          color: Colors.grey[600],
-                        ),
-                      ),
-              ),
-              MyTextField(controller: showNameController, label: 'shoe name'),
-              space,
-              MyTextField(controller: costPriceController, label: 'Cost Price'),
-              space,
-              MyTextField(controller: sellPriceController, label: 'Sell Price'),
-              space,
-              MyTextField(
-                controller: descriptionController,
-                label: 'Description',
-              ),
-              space,
-              Row(
-                children: [
-                  Text('Selected Date: '),
-                  SizedBox(width: 7),
-                  Text(
-                    _dateString,
-                    style: TextStyle(fontSize: 16, color: Colors.green),
-                  ),
-                ],
-              ),
-              space,
-              Row(
-                children: [
-                  Text(
-                    'pick date the shoe was bought',
-                    style: TextStyle(color: Colors.green),
-                  ),
-                  SizedBox(width: 7),
-                  IconButton(
-                    onPressed: pickDate,
-                    icon: Icon(Icons.calendar_month_outlined),
-                  ),
-                ],
-              ),
-              space,
-              Row(
-                children: [
-                  Text('Selected Date Sold: '),
-                  SizedBox(width: 7),
-                  Text(
-                    _dateStringSold,
-                    style: TextStyle(fontSize: 16, color: Colors.green),
-                  ),
-                ],
-              ),
-              space,
-              Row(
-                children: [
-                  Text(
-                    'pick date the shoe was sold',
-                    style: TextStyle(color: Colors.green),
-                  ),
-                  SizedBox(width: 7),
-                  IconButton(
-                    onPressed: pickDateSold,
-                    icon: Icon(Icons.calendar_month_outlined),
-                  ),
-                ],
-              ),
-              space,
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    _value ? 'Sold' : 'In stock',
-                    style: TextStyle(fontSize: 24),
-                  ),
-                  Switch(
-                    focusColor: Colors.brown,
-                    value: _value,
-                    onChanged: (bool? value) {
-                      setState(() {
-                        _value = value!;
-                      });
-                    },
-                  ),
-                ],
-              ),
-              space,
-              if (_statusMessage != null) ...[
-                Text(_statusMessage!, style: TextStyle(color: Colors.red)),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
                 space,
+                SizedBox(
+                  height: 200,
+                  width: double.infinity,
+                  child: _uint8list != null
+                      ? Image.memory(_uint8list!, fit: BoxFit.cover)
+                      : Container(
+                          color: Colors.grey[300],
+                          child: Icon(
+                            Icons.image,
+                            size: 100,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                ),
+                MyTextField(controller: showNameController, label: 'shoe name'),
+                space,
+                MyTextField(
+                  controller: costPriceController,
+                  label: 'Cost Price',
+                ),
+                space,
+                MyTextField(
+                  controller: sellPriceController,
+                  label: 'Sell Price',
+                ),
+                space,
+                MyTextField(
+                  controller: descriptionController,
+                  label: 'Description',
+                ),
+                space,
+                Row(
+                  children: [
+                    Text('Selected Date: '),
+                    SizedBox(width: 7),
+                    Text(
+                      _dateString,
+                      style: TextStyle(fontSize: 16, color: Colors.green),
+                    ),
+                  ],
+                ),
+                space,
+                Row(
+                  children: [
+                    Text(
+                      'pick date the shoe was bought',
+                      style: TextStyle(color: Colors.green),
+                    ),
+                    SizedBox(width: 7),
+                    IconButton(
+                      onPressed: pickDate,
+                      icon: Icon(Icons.calendar_month_outlined),
+                    ),
+                  ],
+                ),
+                space,
+                Row(
+                  children: [
+                    Text('Selected Date Sold: '),
+                    SizedBox(width: 7),
+                    Text(
+                      _dateStringSold,
+                      style: TextStyle(fontSize: 16, color: Colors.green),
+                    ),
+                  ],
+                ),
+                space,
+                Row(
+                  children: [
+                    Text(
+                      'pick date the shoe was sold',
+                      style: TextStyle(color: Colors.green),
+                    ),
+                    SizedBox(width: 7),
+                    IconButton(
+                      onPressed: pickDateSold,
+                      icon: Icon(Icons.calendar_month_outlined),
+                    ),
+                  ],
+                ),
+                space,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      _value ? 'Sold' : 'In stock',
+                      style: TextStyle(fontSize: 24),
+                    ),
+                    Switch(
+                      focusColor: Colors.brown,
+                      value: _value,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          _value = value!;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+                space,
+                if (_statusMessage != null) ...[
+                  Text(_statusMessage!, style: TextStyle(color: Colors.red)),
+                  space,
+                ],
+                ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      saveShoe(context);
+                    }
+                  },
+                  child: Text('Save Shoe'),
+                ),
               ],
-              ElevatedButton(
-                onPressed: () {
-                  saveShoe(context);
-                },
-                child: Text('Save Shoe'),
-              ),
-            ],
+            ),
           ),
         ),
       ),
@@ -247,78 +261,72 @@ class _AddShoePageState extends State<AddShoePage> {
     });
   }
 
-  Future<Uint8List> computeBytes(XFile file) async {
-    return await compute(_readAsBytes, file.path);
-  }
-
-  Future<Uint8List> _readAsBytes(String path) async {
-    final file = XFile(path);
-    return await file.readAsBytes();
-  }
-
   void pickPhoto() async {
     setState(() {
       isLoading = true;
     });
     try {
       ImagePicker picker = ImagePicker();
-      XFile? pickedImage = await picker.pickImage(source: ImageSource.gallery);
+      XFile? pickedImage = await picker.pickImage(
+        source: ImageSource.gallery,
+        maxHeight: 1280,
+        maxWidth: 1280,
+        imageQuality: 80,
+      );
 
-      if (pickedImage != null) {
+      if (pickedImage == null) return;
+
+      final bytes = await computeBytes(pickedImage);
+
+      if (!mounted) {
         setState(() {
           _file = pickedImage;
-        });
-      }
-
-      if (pickedImage != null) {
-        final bytes = await computeBytes(pickedImage);
-        setState(() {
           _uint8list = bytes;
         });
       }
-    } catch (e) {
-      print('Could not find');
+    } on PlatformException catch (e) {
+      if (mounted) {
+        Utilities().scaffoldMessanger(context, 'platform error ${e.message}');
+      }
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
     }
-    setState(() {
-      isLoading = false;
-    });
   }
 
-  void takePhoto() async {
+  void takePhoto({required ImageSource source}) async {
     setState(() {
       isLoading = true;
     });
     try {
       ImagePicker picker = ImagePicker();
-      XFile? pickedImage = await picker.pickImage(source: ImageSource.camera);
+      XFile? pickedImage = await picker.pickImage(source: source);
 
-      if (pickedImage != null) {
+      if (pickedImage == null) return;
+
+      final bytes = await computeBytes(pickedImage);
+      if (mounted) {
         setState(() {
           _file = pickedImage;
-        });
-      }
-
-      if (pickedImage != null) {
-        final bytes = await computeBytes(pickedImage);
-        setState(() {
           _uint8list = bytes;
         });
       }
-    } catch (e) {}
-    setState(() {
-      isLoading = false;
-    });
+    } on PlatformException catch (e) {
+      if (mounted) {
+        Utilities().scaffoldMessanger(context, 'permission  ${e.message}');
+      }
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   void saveShoe(BuildContext context) {
-    if (showNameController.text.isEmpty ||
-        costPriceController.text.isEmpty ||
-        sellPriceController.text.isEmpty ||
-        descriptionController.text.isEmpty ||
-        _file == null ||
-        _dateTime == null) {
+    if (_file == null || _dateTime == null) {
       setState(() {
-        _statusMessage = 'Please fill all fields and select a photo and date.';
+        _statusMessage = 'Please select a photo and date.';
       });
       return;
     }
@@ -351,4 +359,13 @@ class _AddShoePageState extends State<AddShoePage> {
       _statusMessage = null;
     });
   }
+}
+
+Future<Uint8List> computeBytes(XFile file) async {
+  return await compute(_readAsBytes, file.path);
+}
+
+Future<Uint8List> _readAsBytes(String path) async {
+  final file = XFile(path);
+  return await file.readAsBytes();
 }
