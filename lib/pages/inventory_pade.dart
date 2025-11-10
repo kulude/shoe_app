@@ -20,7 +20,7 @@ class _InventoryPageState extends State<InventoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    final shoeServicce = Provider.of<ShoeService>(context);
+    final shoeServicce = Provider.of<ShoeService>(context, listen: false);
     final lengthOfShoeToDelete = shoeServicce.shoesForDelete;
     return Scaffold(
       appBar: AppBar(

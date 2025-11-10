@@ -46,6 +46,40 @@ class FurtherShoeService {
     return today.subtract(Duration(days: today.weekday - 1));
   }
 
+  String getDayName(DateTime dateTime) {
+    switch (dateTime.weekday) {
+      case 1:
+        return 'mon';
+      case 2:
+        return 'tues';
+      case 3:
+        return 'wed';
+      case 4:
+        return 'thurs';
+      case 5:
+        return 'frid';
+      case 6:
+        return 'sat';
+      case 7:
+        return 'sun';
+      default:
+        return '';
+    }
+  }
+
+  DateTime startOfWeek1() {
+    DateTime? startOfWeek;
+
+    DateTime today = DateTime.now();
+
+    for (int i = 0; i < 7; i++) {
+      if (getDayName(today.subtract(Duration(days: i))) == 'mon') {
+        startOfWeek = today.subtract(Duration(days: i));
+      }
+    }
+    return startOfWeek!;
+  }
+
   String convertDateTimeToString(DateTime date) {
     String year = date.year.toString();
 
@@ -78,13 +112,13 @@ class FurtherShoeService {
     return shoeDataBought;
   }
 
-  Map<String, double> graphMapSold() {
+  Map<String, double> get graphMapSold {
     Map<String, double> shoeDataSold = {};
 
     for (var shoe in shoeService.getAllShoes) {
       if (shoe.dateSold != null && (shoe.status ?? false)) {
         String dateKey = convertDateTimeToString(shoe.dateSold!);
-        double amountSold = shoe.sellPrice;
+        double amountSold = shoe.profit;
 
         if (shoeDataSold.containsKey(dateKey)) {
           final currentAmount = shoeDataSold[dateKey]!;

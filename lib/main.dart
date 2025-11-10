@@ -15,7 +15,7 @@ void main() async {
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZuZndsYnVrdGFlZGpqZ3RnZXlrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA2MTM3ODQsImV4cCI6MjA3NjE4OTc4NH0.Jze8y6BF3b5v0kX-weepAWskPttcHe1UsKruPEjky6Q',
   );
   await Hive.initFlutter();
-  //Hive.registerAdapter(ShoeAdapter);
+  //Hive.registerAdapter(ShoeAdapter());
   await Hive.openBox<Shoe>('shoeBox');
   runApp(
     MultiProvider(

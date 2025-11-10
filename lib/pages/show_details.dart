@@ -91,7 +91,7 @@ class DetailsPage extends StatelessWidget {
                   ),
                   space,
                   Text(
-                    'The shoe was sold for: sh ${shoe.sellPrice}',
+                    'The shoe was sold for: sh ${shoe.sellPrice ?? 0.0}',
                     style: style,
                   ),
                   space,
@@ -104,7 +104,7 @@ class DetailsPage extends StatelessWidget {
                   space,
                   Text(
                     shoe.dateSold != null
-                        ? 'The shoe was sold for: sh ${shoe.dateSold}'
+                        ? 'The shoe was sold on: sh ${shoe.dateSold}'
                         : 'The date for when the shoe was sold has not been updated',
                   ),
                   space,

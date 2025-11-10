@@ -22,7 +22,7 @@ class _EditShoeState extends State<EditShoe> {
   DateTime? _dateEditTime;
   String _dateEditStringSold = '';
   DateTime? _dateEditTimeSold;
-  //String? _statusEditMessage;
+  String? _statusEditMessage;
   //bool isLoading = false;
   bool _value = false;
 
@@ -34,14 +34,16 @@ class _EditShoeState extends State<EditShoe> {
       text: widget.shoe.costPrice.toString(),
     );
     sellPricEditEController = TextEditingController(
-      text: widget.shoe.sellPrice.toString(),
+      text: (widget.shoe.sellPrice ?? 0.0).toString(),
     );
     descriptionEditController = TextEditingController(
       text: widget.shoe.description,
     );
     _dateEditString = convertDateToString(widget.shoe.dateBought);
     _dateEditTime = widget.shoe.dateBought;
-    _dateEditStringSold = widget.shoe.dateSold.toString();
+    _dateEditStringSold = widget.shoe.dateSold != null
+        ? convertDateToString(widget.shoe.dateSold!)
+        : 'No time yet';
     _dateEditTimeSold = widget.shoe.dateSold;
     _value = widget.shoe.status!;
   }
@@ -171,10 +173,10 @@ class _EditShoeState extends State<EditShoe> {
                 ],
               ),
               space,
-              // if (_statusEditMessage != null) ...[
-              //   Text(_statusEditMessage!, style: TextStyle(color: Colors.red)),
-              //   space,
-              // ],
+              if (_statusEditMessage != null) ...[
+                Text(_statusEditMessage!, style: TextStyle(color: Colors.red)),
+                space,
+              ],
               ElevatedButton(
                 onPressed: () {
                   saveShoe(context);
@@ -198,7 +200,7 @@ class _EditShoeState extends State<EditShoe> {
     String day = date.day.toString();
 
     if (day.length == 1) {
-      day = '0' + day;
+      day = '0$day';
     }
 
     return '$year/$month/$day';
@@ -243,6 +245,21 @@ class _EditShoeState extends State<EditShoe> {
   }
 
   void saveShoe(BuildContext context) {
+    if (_dateEditTimeSold == null) {
+      setState(() {
+        _statusEditMessage = 'please fill the sell date';
+      });
+      return;
+    }
+    if (_dateEditTimeSold!
+        .toUtc()
+        .difference(_dateEditTime!.toUtc())
+        .isNegative) {
+      setState(() {
+        _statusEditMessage = 'sell date cannot be before buy date';
+      });
+      return;
+    }
     Provider.of<ShoeService>(context, listen: false).editShoe(
       widget.shoe.id,
       shoeName: showNameEditController.text,
@@ -264,8 +281,11 @@ class _EditShoeState extends State<EditShoe> {
     sellPricEditEController.clear();
     descriptionEditController.clear();
     setState(() {
+      _statusEditMessage = null;
       _dateEditString = '';
       _dateEditTime = null;
+      _dateEditStringSold = '';
+      _dateEditTimeSold = null;
     });
   }
 }

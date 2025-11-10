@@ -1,5 +1,3 @@
-//import 'package:show_biz/modals/shoe_status.dart';
-//library shoe_modal;
 import 'dart:typed_data';
 
 import 'package:hive/hive.dart';
@@ -15,7 +13,7 @@ class Shoe {
   @HiveField(2)
   final double costPrice;
   @HiveField(3)
-  final double sellPrice;
+  final double? sellPrice;
   @HiveField(4)
   final DateTime dateBought;
   @HiveField(5)
@@ -32,7 +30,7 @@ class Shoe {
     String? id,
     required this.shoeName,
     required this.costPrice,
-    required this.sellPrice,
+    this.sellPrice,
     required this.dateBought,
     required this.imageBytes,
     this.dateSold,
@@ -41,7 +39,7 @@ class Shoe {
     //this.shoeStatus,
   }) : id = id ?? Uuid().v4();
 
-  double get profit => sellPrice - costPrice;
+  double get profit => sellPrice != null ? sellPrice! - costPrice : 0.0;
 
   Duration? get timeTaken => dateSold?.difference(dateBought);
 

@@ -10,28 +10,36 @@ class ShoeService extends ChangeNotifier {
 
   double get totalProfit {
     return _shoes
-        .where((shoe) => shoe.dateSold != null || (shoe.status ?? false))
-        .fold(0.0, (sum, shoe) => sum + shoe.profit);
+        .where(
+          (shoe) =>
+              (shoe.dateSold != null && (shoe.status ?? false)) &&
+              !shoe.profit.isNegative,
+        )
+        .fold(
+          0.0,
+          (sum, shoe) => shoe.sellPrice != null ? sum + shoe.profit : 0.0,
+        );
   }
 
   double get totalLoss {
     return _shoes
         .where(
           (shoe) =>
-              (shoe.dateSold != null || (shoe.status ?? false)) &&
+              (shoe.dateSold != null && (shoe.status ?? false)) &&
               shoe.profit.isNegative,
         )
         .fold(0.0, (sum, shoe) {
-          return sum + shoe.profit;
+          return shoe.sellPrice != null ? sum + shoe.profit : 0.0;
         });
   }
 
   double get totalMony {
-    return _shoes
-        .where((shoe) => shoe.dateSold != null || (shoe.status ?? false))
-        .fold(0.0, (sum, shoe) {
-          return sum + shoe.sellPrice;
-        });
+    return _shoes.where((shoe) => shoe.sellPrice != null).fold(0.0, (
+      sum,
+      shoe,
+    ) {
+      return sum + shoe.sellPrice!;
+    });
   }
 
   double get totalCost {
@@ -42,13 +50,13 @@ class ShoeService extends ChangeNotifier {
 
   List<Shoe> get shoesSold {
     return _shoes
-        .where((shoe) => shoe.dateSold != null || (shoe.status ?? false))
+        .where((shoe) => shoe.dateSold != null && (shoe.status ?? false))
         .toList();
   }
 
   Duration? get averageTimeTaken {
     final shoesSold = _shoes
-        .where((shoe) => shoe.dateSold != null || (shoe.status ?? false))
+        .where((shoe) => shoe.dateSold != null && (shoe.status ?? false))
         .toList();
     if (shoesSold.isEmpty) return null;
     final totalDuration = shoesSold.fold<Duration>(
@@ -67,7 +75,8 @@ class ShoeService extends ChangeNotifier {
   void addShoe(Shoe shoe) {
     _shoes.add(shoe);
     hiveService.addShoeToHive(shoe);
-    //supabaseService.insertShoeToTable(shoe);
+    supabaseService.insertShoeToTable(shoe);
+    print('added shoe to firebase');
     notifyListeners();
   }
 
@@ -102,6 +111,7 @@ class ShoeService extends ChangeNotifier {
       notifyListeners();
     }
     supabaseService.updateShoeInTable(_shoes[index]);
+    print('Updated shoe to supabase');
   }
 
   final Set<String> _selectedShoeId = {};

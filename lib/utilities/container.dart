@@ -54,11 +54,7 @@ class MyContainer extends StatelessWidget {
                 child: Container(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [
-                        Colors.black.withOpacity(0.4),
-                        Colors.transparent,
-                        Colors.black.withOpacity(0.4),
-                      ],
+                      colors: [Colors.black, Colors.transparent, Colors.black],
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                     ),
@@ -81,7 +77,7 @@ class MyContainer extends StatelessWidget {
             Positioned(
               top: 8,
               left: 8,
-              child: _infoTag('sh ${shoe.sellPrice}'),
+              child: _infoTag('sh ${shoe.sellPrice ?? 0.0}'),
             ),
 
             // Status (top-right)
@@ -105,7 +101,7 @@ class MyContainer extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.7),
+        color: color,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(

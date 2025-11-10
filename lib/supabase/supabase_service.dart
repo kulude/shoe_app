@@ -8,7 +8,7 @@ class SupabaseService {
     try {
       await supaBase.from('shoeTable').insert(shoe.toMap());
     } catch (e) {
-      print('Error inserting shoe: $e');
+      throw ('Error inserting shoe: $e');
     }
   }
 
@@ -23,7 +23,7 @@ class SupabaseService {
         return shoes;
       }
     } catch (e) {
-      print('Error fetching shoes: $e');
+      throw ('Error fetching shoes: $e');
     }
     return [];
   }
@@ -32,7 +32,7 @@ class SupabaseService {
     try {
       await supaBase.from('shoeTable').update(shoe.toMap()).eq('id', shoe.id);
     } catch (e) {
-      print('Error updating shoe: $e');
+      throw ('Error updating shoe: $e');
     }
   }
 
@@ -40,7 +40,7 @@ class SupabaseService {
     try {
       await supaBase.from('shoeTable').delete().eq('id', id);
     } catch (e) {
-      print('Error deleting shoe: $e');
+      throw ('Error deleting shoe: $e');
     }
   }
 }

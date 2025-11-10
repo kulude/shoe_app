@@ -48,7 +48,7 @@ class FinancialsPage extends StatelessWidget {
                   color: Colors.brown[300],
                   child: ListTile(
                     title: Text('${shoesPerKey.length} bought on $dateTime'),
-                    subtitle: Text('sh ${spent} spend '),
+                    subtitle: Text('sh $spent spend '),
                   ),
                 );
               },
@@ -73,7 +73,7 @@ class FinancialsPage extends StatelessWidget {
                 final dateTime = convertDateToString(dateKey);
                 final sellPrice = shoesSoldPerDay.fold<double>(
                   0.0,
-                  (sum, shoe) => sum + shoe.sellPrice,
+                  (sum, shoe) => sum + shoe.sellPrice!,
                 );
                 return Card(
                   margin: EdgeInsets.all(9),
